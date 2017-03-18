@@ -28,7 +28,7 @@ sub session_valid
 sub read_sessions
 {
         my %s_hash;
-        open(my $sfh, '<', $Constants::session_path) or die "Cannot open $Constants::session_path $!\n";
+        open(my $sfh, '<', $Constants::session_path) or die "Cannot read from $Constants::session_path $!\n";
         flock( $sfh, 1);
         while(my $line = <$sfh>)
         {
@@ -42,7 +42,7 @@ sub read_sessions
 sub save_sessions
 {
         my %s_hash = @_;
-        open(my $sfh, '>', $Constants::session_path) or die "Cannot open $Constants::session_path $!\n";
+        open(my $sfh, '>', $Constants::session_path) or die "Cannot write to $Constants::session_path $!\n";
         flock( $sfh, 2);
         foreach my $session (keys %s_hash)
         {
@@ -76,7 +76,8 @@ sub save_session
 {
         my $sid = shift;
         my $timeout = 3600 + time();
-        open (my $sfh, '>>', $Constants::session_path) or die "Cannot open $Constants::session_path $!\n";
+	if(!-d '/tmp/webcam') { mkdir '/tmp/webcam'; }
+        open (my $sfh, '>>', $Constants::session_path) or die "Cannot write to $Constants::session_path $!\n";
         flock ($sfh, 2); #exclusive lock
         print $sfh "$sid:$timeout\n";
         close $sfh;
@@ -86,7 +87,7 @@ sub save_mandate
 {
         my $mandate = shift @_;
         open (my $mfh, '>>', $Constants::mandate_path) or
-                die "Cannot open file '$Constants::mandate_path' $!";
+                die "Cannot write to file '$Constants::mandate_path' $!";
         flock($mfh, 2);
         print $mfh "$mandate\n";
         close $mfh;
