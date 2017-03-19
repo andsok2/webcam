@@ -42,7 +42,7 @@ sub read_sessions
 sub save_sessions
 {
         my %s_hash = @_;
-        open(my $sfh, '>', $Constants::session_path) or die "Cannot write to $Constants::session_path $!\n";
+        open(my $sfh, '>', $Constants::session_path) or die "Cannot update $Constants::session_path $!\n";
         flock( $sfh, 2);
         foreach my $session (keys %s_hash)
         {
@@ -76,7 +76,7 @@ sub save_session
 {
         my $sid = shift;
         my $timeout = 3600 + time();
-	if(!-d '/tmp/webcam') { mkdir '/tmp/webcam'; }
+        if(!-d '/tmp/webcam') { mkdir $Constants::tmp_dir_path; }
         open (my $sfh, '>>', $Constants::session_path) or die "Cannot write to $Constants::session_path $!\n";
         flock ($sfh, 2); #exclusive lock
         print $sfh "$sid:$timeout\n";
